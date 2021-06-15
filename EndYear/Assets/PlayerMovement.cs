@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -10,30 +11,27 @@ public class PlayerMovement : MonoBehaviour
     public float gravity = -9.18f;
     public float jumpHeight = 3f;
 
-    public Transform groundCheck;
-    public float groundDistance = 0.4f;
-    public LayerMask groundMask;
-
     Vector3 velocity;
-    bool isGrounded;
+    
+    public Image crosshair;
+    private RaycastHit hit;
+    private EnemyHandler enemy;
+    public Camera fpsCam;
+
+    void Start() {
+        speed = 12f;
+    }
     void Update()
     {
-       isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-
-        if (isGrounded && velocity.y < 0)
-        {
-            velocity.y = -2f;
+        
+        if(Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, 30f)){
+            enemy = hit.transform.GetComponent<EnemyHandler>();   
         }
-
-        if (Input.GetKey("left shift") && isGrounded)
-        {
-            speed = 20f;
+        else {
+            enemy = null;
         }
-        else
-        {
-            speed = 12f;
-        }
-
+        if(enemy != null) crosshair.GetComponent<Image>().color = Color.green;
+        else crosshair.GetComponent<Image>().color = Color.red;
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
@@ -41,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(move * speed * Time.deltaTime);
 
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown("Jump"))
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
