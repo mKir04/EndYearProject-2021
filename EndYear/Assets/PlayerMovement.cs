@@ -32,11 +32,11 @@ public class PlayerMovement : MonoBehaviour
         }
         if(enemy != null) crosshair.GetComponent<Image>().color = Color.green;
         else crosshair.GetComponent<Image>().color = Color.red;
+        
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
         Vector3 move = transform.right * x + transform.forward * z;
-
         controller.Move(move * speed * Time.deltaTime);
 
         if (Input.GetButtonDown("Jump"))

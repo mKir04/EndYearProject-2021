@@ -79,6 +79,6 @@ public class EnemyHandler : MonoBehaviour
     }
 
     private void bePatrolling() {
-        patrolling = true;
+        patrolling = false;
     }
 }
